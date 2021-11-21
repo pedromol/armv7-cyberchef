@@ -1,13 +1,20 @@
-FROM docker.io/node:10 as build
+FROM node:10-alpine as build
+
+ENV PYTHONUNBUFFERED=1
+RUN apk update && apk add --no-cache --virtual build-dependencies build-base gcc wget git python3
+RUN ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
 
 RUN chown -R node:node /srv
 
 USER node
 WORKDIR /srv
 
+
 RUN git clone --depth=1 https://github.com/gchq/CyberChef.git .
-RUN npx browserslist@latest --update-db
 RUN npm remove chromedriver --save-dev
+RUN npx browserslist@latest --update-db
 RUN npm install
 
 ENV NODE_OPTIONS="--max-old-space-size=2048"
