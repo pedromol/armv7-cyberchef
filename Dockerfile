@@ -4,6 +4,7 @@ RUN apk add git
 WORKDIR /srv
 
 RUN git clone https://github.com/gchq/CyberChef.git .
+RUN npm remove chromedriver --save-dev
 RUN npm install
 RUN npx grunt prod
 
